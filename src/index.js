@@ -1,14 +1,38 @@
-import mongoose from "mongoose";
-import { DB_NAME } from "./constants";
+import dotenv from "dotenv"
+import connectDB from "./db/index.js";
 
-// DB connection (iffis)
+dotenv.config({
+    path: './env'
+})
 
-(async () => {
-    try {
-        await mongoose.connect(`${process.env.MONGODB_URL}/${DB_NAME}`)
-    } catch (error) {
-        console.error("ERROR: " , error)
-        throw err
-    }
+connectDB()
 
-})()
+
+// first method
+
+
+// import mongoose from "mongoose";
+// import { DB_NAME } from "./constants.js";
+// import express from "express"
+// // DB connection (iffis)
+
+// const app = express()
+
+// (async () => {
+//     try {
+//         await mongoose.connect(`${process.env.MONGODB_URL}/${DB_NAME}`)
+//         app.on("error", (error) => {
+//             console.log("ERROR",error);
+//             throw error
+//         })
+
+//         app.listen(process.env.PORT, () => {
+//             console.log(`App is listening on port ${process.env.PORT}`);
+//         })
+//     } catch (error) {
+//         console.error("ERROR: " , error)
+//         throw err
+//     }
+
+// })()
+
