@@ -7,7 +7,7 @@ import fs from "fs"
     api_secret: process.env.CLOUDNIARY_CLOUD_SECRET
 });
 
-const uplaodOnCloudinary = async (localFilePath) => {
+const uploadOnCloudinary = async (localFilePath) => {
     try {
         if (!localFilePath) {
             return null
@@ -25,4 +25,4 @@ const uplaodOnCloudinary = async (localFilePath) => {
     }
 }
 
-export {uplaodOnCloudinary}
+export {uploadOnCloudinary}
