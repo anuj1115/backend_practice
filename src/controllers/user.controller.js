@@ -4,6 +4,7 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import {uploadOnCloudinary} from "../utils/cloudinary.js"
 import jwt from "jsonwebtoken"
+import mongoose from "mongoose";
 
 const generateAccessAndRefreshTokens = async(userId) => {
     try {
@@ -171,6 +172,7 @@ const logoutUser = asyncHandler (async(req,res) => {
         }
     )
 
+
     const options = {
         httpOnly: true,
         secure: true
@@ -195,7 +197,6 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
             incomingRefreshToken,
             process.env.REFRESH_TOKEN_SECRET
         )
-    
         const user = await User.findById(decodedToken?._id)
     
         if(!user) {
@@ -231,4 +232,23 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
 
 })
 
-export {registerUser, loginUser, logoutUser, refreshAccessToken}
+const changeCurrentPassword = asyncHandler(async(req, res) => {
+    // these data comes from frontend
+    const {oldPassword, newPassword} = req.body
+    const user = await User.findById(req.user?._id)
+    const ispasswordCorrect = await user.isPasswordCorrect(oldPassword)
+
+    if(!ispasswordCorrect) {
+        throw new ApiError(400, "Invalid old password")
+    }
+
+    user.password = newPassword
+    await user.save({validateBeforeSave: false})
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200, {}, "Password changed successfully"))
+
+})
+
+export {registerUser, loginUser, logoutUser, refreshAccessToken, changeCurrentPassword}
